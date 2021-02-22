@@ -1,5 +1,3 @@
-// EXERCISES PAGE
-
 package com.example.alarm;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -40,22 +39,44 @@ public class Page3 extends AppCompatActivity {
 
         Button res1 = findViewById(R.id.res1);
         Button res2 = findViewById(R.id.res2);
-        String rand_op = random_operation(lvl);
-        String u1 = result(rand_op);
-        String u2 = false_result(rand_op);
-        if (choice[0] < 0.5){
-            res1.setText(u1.substring(0,u1.length()-2));
-            res2.setText(u2.substring(0,u2.length()-2));
+        Button res3 = findViewById(R.id.res3);
+        Button res4 = findViewById(R.id.res4);
+        String random_operation = random_operation(lvl);
+        List<String> false_r = false_results(random_operation);
+        String q1 = result(random_operation);
+        String q2 = false_r.get(0);
+        String q3 = false_r.get(1);
+        String q4 = false_r.get(2);
+        if (choice[0] <= 0.25){
+            res1.setText(q1.substring(0,q1.length()-2));
+            res2.setText(q2.substring(0,q2.length()-2));
+            res3.setText(q3.substring(0,q3.length()-2));
+            res4.setText(q4.substring(0,q4.length()-2));
+
+        }else if (choice[0] <= 0.5 & choice[0] > 0.25){
+            res1.setText(q2.substring(0,q2.length()-2));
+            res2.setText(q3.substring(0,q3.length()-2));
+            res3.setText(q4.substring(0,q4.length()-2));
+            res4.setText(q1.substring(0,q1.length()-2));
+        }else if(choice[0] > 0.75){
+            res1.setText(q3.substring(0,q3.length()-2));
+            res2.setText(q4.substring(0,q4.length()-2));
+            res3.setText(q1.substring(0,q1.length()-2));
+            res4.setText(q2.substring(0,q2.length()-2));
+
         }else{
-            res2.setText(u1.substring(0,u1.length()-2));
-            res1.setText(u2.substring(0,u2.length()-2));
+            res1.setText(q4.substring(0,q4.length()-2));
+            res2.setText(q1.substring(0,q1.length()-2));
+            res3.setText(q2.substring(0,q2.length()-2));
+            res4.setText(q3.substring(0,q3.length()-2));
         }
+
         TextView count_text = findViewById(R.id.count);
         count_text.setText("COUNT: 0");
         TextView answer = findViewById(R.id.answer);
         answer.setText("");
         TextView oper = findViewById(R.id.oper);
-        oper.setText(rand_op.concat(" = ?"));
+        oper.setText(random_operation.concat(" = ?"));
 
         timer = new Timer();
 
@@ -111,7 +132,7 @@ public class Page3 extends AppCompatActivity {
                 Log.d("ssssres1", "res1");
                 secs[0]=20;
 
-                if (choice[0] <0.5){
+                if (choice[0] <= 0.25){
                     ++count[0];
                     count_text.setText("COUNT: "+String.valueOf(count[0]));
                     answer.setTextColor(Color.GREEN);
@@ -123,8 +144,7 @@ public class Page3 extends AppCompatActivity {
                         }
                     },1000);
 
-                }
-                if(choice[0] >=0.5){
+                }else{
                     count[0] = 0;
                     count_text.setText("COUNT: 0");
                     answer.setTextColor(Color.RED);
@@ -148,7 +168,7 @@ public class Page3 extends AppCompatActivity {
                     finish();
                 }else{
                     Log.d("ssssELSE_COUNT",count[0].toString());
-                    choice[0]=change_operation(res1, res2, oper, lvl);
+                    choice[0]=change_operation4(res1, res2, res3, res4, oper, lvl);
 
                 }
 
@@ -161,7 +181,7 @@ public class Page3 extends AppCompatActivity {
                 Log.d("ssssres2", "res2");
                 secs[0]=20;
 
-                if (choice[0] > 0.5){
+                if (choice[0] > 0.5 & choice[0] <= 0.75){
                     ++count[0];
                     count_text.setText("COUNT: "+String.valueOf(count[0]));
                     answer.setTextColor(Color.GREEN);
@@ -173,8 +193,7 @@ public class Page3 extends AppCompatActivity {
                         }
                     },1000);
 
-                }
-                if(choice[0] <= 0.5){
+                }else{
                     count[0] = 0;
                     count_text.setText("COUNT: 0");
                     answer.setTextColor(Color.RED);
@@ -197,7 +216,99 @@ public class Page3 extends AppCompatActivity {
                     finish();
                 }else{
                     Log.d("ssssSTART_CHANGE_OPER","START_CHANGE_OPER");
-                    choice[0] = change_operation(res1, res2, oper, lvl);
+                    choice[0] = change_operation4(res1, res2, res3, res4, oper, lvl);
+
+                }
+            }
+        });
+
+        res3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d("ssssres3", "res3");
+                secs[0]=20;
+
+                if (choice[0] > 0.75){
+                    ++count[0];
+                    count_text.setText("COUNT: "+String.valueOf(count[0]));
+                    answer.setTextColor(Color.GREEN);
+                    answer.setText("CORRECT!");
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            answer.setText("");
+                        }
+                    },1000);
+
+                }else{
+                    count[0] = 0;
+                    count_text.setText("COUNT: 0");
+                    answer.setTextColor(Color.RED);
+                    answer.setText("WRONG!");
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            answer.setText("");
+                        }
+                    },1000);
+                }
+                Log.d("ssssCOUNT",count[0].toString());
+                if(count[0]>2){
+                    Log.d("ssssIF_COUNT>2",count[0].toString());
+                    Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(activity2Intent);
+                    glob.set_ring(false);
+                    ok[0]= false;
+                    glob.set_sveglia("no");
+                    finish();
+                }else{
+                    Log.d("ssssSTART_CHANGE_OPER","START_CHANGE_OPER");
+                    choice[0] = change_operation4(res1, res2, res3, res4, oper, lvl);
+
+                }
+            }
+        });
+
+        res4.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d("ssssres4", "res4");
+                secs[0]=20;
+
+                if(choice[0]<= 0.5 & choice[0] > 0.25){
+                    ++count[0];
+                    count_text.setText("COUNT: "+String.valueOf(count[0]));
+                    answer.setTextColor(Color.GREEN);
+                    answer.setText("CORRECT!");
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            answer.setText("");
+                        }
+                    },1000);
+
+                }else{
+                    count[0] = 0;
+                    count_text.setText("COUNT: 0");
+                    answer.setTextColor(Color.RED);
+                    answer.setText("WRONG!");
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            answer.setText("");
+                        }
+                    },1000);
+                }
+                Log.d("ssssCOUNT",count[0].toString());
+                if(count[0]>2){
+                    Log.d("ssssIF_COUNT>2",count[0].toString());
+                    Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(activity2Intent);
+                    glob.set_ring(false);
+                    ok[0]= false;
+                    glob.set_sveglia("no");
+                    finish();
+                }else{
+                    Log.d("ssssSTART_CHANGE_OPER","START_CHANGE_OPER");
+                    choice[0] = change_operation4(res1, res2, res3, res4, oper, lvl);
 
                 }
             }
@@ -205,24 +316,41 @@ public class Page3 extends AppCompatActivity {
 
     }
 
-    public double change_operation(Button res1, Button res2, TextView oper, String lvl){
+    public double change_operation4(Button res1, Button res2, Button res3, Button res4, TextView oper, String lvl){
         String random_operation = random_operation(lvl);
         oper.setText(random_operation.concat(" = ?"));
         Log.d("ssssRANDOM OPERATION",random_operation);
         Log.d("ssssRESULT",result(random_operation));
-        Log.d("ssssFALSE_RESULT",false_result(random_operation));
+        Log.d("ssssFALSE_RESULT111",false_results(random_operation).get(0));
+        Log.d("ssssFALSE_RESULT222",false_results(random_operation).get(1));
+        Log.d("ssssFALSE_RESULT333",false_results(random_operation).get(2));
         double choice = new Random().nextDouble();
         Log.d("ssssCHANGE OPERATION", Double.toString(choice));
-        if (choice<0.5){
-            String q1 = result(random_operation);
-            String q2 = false_result(random_operation);
+        List<String> false_r = false_results(random_operation);
+        String q1 = result(random_operation);
+        String q2 = false_r.get(0);
+        String q3 = false_r.get(1);
+        String q4 = false_r.get(2);
+        if (choice <= 0.25){
             res1.setText(q1.substring(0,q1.length()-2));
             res2.setText(q2.substring(0,q2.length()-2));
-        }else{
-            String q3 = result(random_operation);
-            String q4 = false_result(random_operation);
+            res3.setText(q3.substring(0,q3.length()-2));
+            res4.setText(q4.substring(0,q4.length()-2));
+        }else if (choice <= 0.5 & choice > 0.25){
+            res1.setText(q2.substring(0,q2.length()-2));
             res2.setText(q3.substring(0,q3.length()-2));
+            res3.setText(q4.substring(0,q4.length()-2));
+            res4.setText(q1.substring(0,q1.length()-2));
+        }else if(choice > 0.75){
+            res1.setText(q3.substring(0,q3.length()-2));
+            res2.setText(q4.substring(0,q4.length()-2));
+            res3.setText(q1.substring(0,q1.length()-2));
+            res4.setText(q2.substring(0,q2.length()-2));
+        }else{
             res1.setText(q4.substring(0,q4.length()-2));
+            res2.setText(q1.substring(0,q1.length()-2));
+            res3.setText(q2.substring(0,q2.length()-2));
+            res4.setText(q3.substring(0,q3.length()-2));
         }
         return choice;
     }
@@ -269,13 +397,54 @@ public class Page3 extends AppCompatActivity {
     public String result(String operation){
         return String.valueOf(eval(operation));
     }
-    public String false_result(String operation){
-        double error = randInt(0,10);
-        error -= 6;
-        if (error==0){
-            error=randInt(0,10);
+    public List<String> false_results(String operation){
+        double choi = new Random().nextDouble();
+        double error1;
+        if (choi<0.3){
+            double error_dec = randInt(-2,2);
+            error1 = error_dec*10;
+        }else{
+            error1 = randInt(1,9);
         }
-        return String.valueOf(eval(operation)+error);
+        if (error1==0){
+            error1=randInt(1,10);
+        }
+
+        double error2;
+        double choic = new Random().nextDouble();
+        if (choic<0.5){
+            double error_dec = randInt(-4,4);
+            error2 = error_dec*10;
+        }else{
+            double error_dec2 = randInt(-4,4);
+            error2 = error_dec2*10;
+            error2 += randInt(1,9);
+        }
+        if (error2==0){
+            error2=randInt(1,11);
+        }
+
+        double error_dec2 = randInt(-2,2);
+        double error3 = error_dec2*10;
+        if (error3==0){
+            error3=randInt(1,100);
+        }
+
+        if (error1==error2 & error2==error3){
+            error2 = error1 - 1;
+            error3 = error1 + 1;
+        }
+        if(error1 == error2){
+            error2 = error1 - 1;
+        }
+        if(error1 == error3){
+            error3 = error1 +1;
+        }
+        if(error2 == error3){
+            error2 = error3 - 1;
+        }
+        double ev = eval(operation);
+        return Arrays.asList(String.valueOf(ev + error1), String.valueOf(ev + error2), String.valueOf(ev + error3));
     }
 
     public static double eval(final String str) {
